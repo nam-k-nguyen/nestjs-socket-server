@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   // Uncomment these lines to use the Redis adapter:
   // const redisIoAdapter = new RedisIoAdapter(app);
