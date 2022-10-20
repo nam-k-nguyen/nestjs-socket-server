@@ -11,7 +11,7 @@ import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000/',
+    origin: '*',
   },
 })
 export class EventsGateway {
@@ -25,7 +25,6 @@ export class EventsGateway {
     return from([1, 2, 3]).pipe(
       map(item => ({ event: 'events', data: item }))
     );
-
   }
 
   @SubscribeMessage('identity')
