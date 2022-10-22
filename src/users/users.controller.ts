@@ -13,9 +13,20 @@ export class UsersController {
   }
 
   @Post('signin')
-  async verify(@Body() createUserDto: CreateUserDto): Promise<boolean> {
-    return this.usersService.findOneByUsernameAndPassword(createUserDto.username, createUserDto.password).then(data => {
-      return data ? true : false
+  async signin(@Body() createUserDto: CreateUserDto): Promise<boolean> {
+    return this.usersService.findOneByUsernameAndPassword(createUserDto.username, createUserDto.password).then(user => {
+      return user ? true : false
+    })
+  }
+
+  @Post('register')
+  async register(@Body() createUserDto: CreateUserDto): Promise<boolean> {
+    return this.usersService.findOneByUsername(createUserDto.username).then(user => {
+      if (user) {return false;}
+      else {
+        this.usersService.create({ username: createUserDto.username, password: createUserDto.password, elo: '0' })
+        return true;
+      }
     })
   }
 
