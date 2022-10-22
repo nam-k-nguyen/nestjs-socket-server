@@ -12,7 +12,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('verify')
+  @Post('signin')
   async verify(@Body() createUserDto: CreateUserDto): Promise<boolean> {
     return this.usersService.findOneByUsernameAndPassword(createUserDto.username, createUserDto.password).then(data => {
       return data ? true : false
