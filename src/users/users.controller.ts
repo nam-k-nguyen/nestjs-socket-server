@@ -31,7 +31,7 @@ export class UsersController {
   }
 
   @Post('info')
-  get(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async get(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.findOneByUsername(createUserDto.username).then(user => {
       return {username: user.username, elo: user.elo}
     })

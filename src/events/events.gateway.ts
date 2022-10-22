@@ -35,4 +35,16 @@ export class EventsGateway {
     let col = String.fromCharCode('a'.charCodeAt(0) + ((num - 1) % 8));
     return row + col;
   }
+
+  @SubscribeMessage('find_match')
+  async findMatch(@MessageBody() data: any): Promise<string> {
+    console.log(data)
+    return 'the server said that somebody just find a match'
+  }
+
+  // @SubscribeMessage('queueing')
+  // queue(@MessageBody() data: any): string {
+  //   return 'stonk'
+  // }
+
 }
