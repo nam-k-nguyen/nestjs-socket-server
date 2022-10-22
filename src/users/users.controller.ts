@@ -5,30 +5,37 @@ import { User } from './interfaces/user.interface';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
-//   @Get(':id')
-//   findOne(@Param('id') id): Promise<User> {
-//     return this.usersService.findOneById(id);
-//   }
+  @Get('verify')
+  async verify(@Body() createUserDto: CreateUserDto): Promise<boolean> {
+    return this.usersService.findOneByUsernameAndPassword(createUserDto.username, createUserDto.password).then(data => {
+      return data ? true : false
+    })
+  }
+
+  //   @Get(':id')
+  //   findOne(@Param('id') id): Promise<User> {
+  //     return this.usersService.findOneById(id);
+  //   }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
-//   @Delete(':id')
-//   delete(@Param('id') id): Promise<User> {
-//     return this.usersService.delete(id);
-//   }
+  //   @Delete(':id')
+  //   delete(@Param('id') id): Promise<User> {
+  //     return this.usersService.delete(id);
+  //   }
 
-//   @Put(':id')
-//   update(@Body() updateUserDto: CreateUserDto, @Param('id') id): Promise<User> {
-//     return this.usersService.update(id, updateUserDto);
-//   }
+  //   @Put(':id')
+  //   update(@Body() updateUserDto: CreateUserDto, @Param('id') id): Promise<User> {
+  //     return this.usersService.update(id, updateUserDto);
+  //   }
 }
