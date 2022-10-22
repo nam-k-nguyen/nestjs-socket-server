@@ -30,12 +30,19 @@ export class UsersController {
     })
   }
 
+  @Post('info')
+  get(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.usersService.findOneByUsername(createUserDto.username).then(user => {
+      return {username: user.username, elo: user.elo}
+    })
+  }
+
   //   @Get(':id')
   //   findOne(@Param('id') id): Promise<User> {
   //     return this.usersService.findOneById(id);
   //   }
 
-  @Post()
+  @Post('create')
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
