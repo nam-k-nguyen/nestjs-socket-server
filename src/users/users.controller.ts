@@ -22,9 +22,15 @@ export class UsersController {
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto): Promise<boolean> {
     return this.usersService.findOneByUsername(createUserDto.username).then(user => {
-      if (user) {return false;}
+      if (user) { return false; }
       else {
-        this.usersService.create({ username: createUserDto.username, password: createUserDto.password, elo: '0' })
+        this.usersService.create({
+          username: createUserDto.username,
+          password: createUserDto.password,
+          elo: '0',
+          win: '0',
+          lose: '0'
+        })
         return true;
       }
     })
@@ -33,7 +39,12 @@ export class UsersController {
   @Post('info')
   async get(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.findOneByUsername(createUserDto.username).then(user => {
-      return {username: user.username, elo: user.elo}
+      return {
+        username: user.username,
+        elo: user.elo,
+        win: user.win,
+        lose: user.lose
+      }
     })
   }
 
