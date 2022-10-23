@@ -45,21 +45,29 @@ export class EventsGateway {
   findMatch(@MessageBody() username: string, @ConnectedSocket() client: Socket): string {
     this.eventsService.addToQueue(username, client)
 
-    console.log(this.eventsService.getQueue())
-    console.log(client.id)
+    console.log('queue (in find_match):', this.eventsService.getQueue())
+    console.log('client id (in find match): ', client.id)
 
     return 'finding a user for you...';
   }
 
   @SubscribeMessage('xo_click')
-  makeMove(@MessageBody() username: string, opponent_username: string, row: number, col: number, @ConnectedSocket() client: Socket): any {
-    let match = this.eventsService.findMatchWithTwoUsername(username, opponent_username)
+  makeMove(
+    @MessageBody() data: { username: string, opponent_username: string, row: number, column: number }, @ConnectedSocket() client: Socket): any {
+
+    console.log('xo click data', data)
+    let match = this.eventsService.findMatchWithTwoUsername(data.username, data.opponent_username)
     let opponent_socket: Socket;
-    console.log(match)
-    if (match && match.p1.username === opponent_username) { opponent_socket = match.p1.socket }
-    if (match && match.p2.username === opponent_username) { opponent_socket = match.p2.socket }
-    console.log(match.p1.username, match.p2.username)
-    console.log(opponent_socket)
-    opponent_socket.emit('opponent_xo_click', { username, row, col })
+
+    console.log('match in xo_click', match)
+    if (match !== undefined) {
+      console.log('inside xo_click', match)
+      if (match.p1.username === data.opponent_username) { opponent_socket = match.p1.socket }
+      if (match.p2.username === data.opponent_username) { opponent_socket = match.p2.socket }
+      console.log('opponent socket in xo_click', opponent_socket)
+      opponent_socket.emit('opponent_xo_click', { username: data.username, row: data.row, col: data.column })
+    }
+
+    // console.log('match usernames in xo_click', match.p1.username, match.p2.username)
   }
 }
