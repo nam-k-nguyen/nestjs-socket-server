@@ -16,8 +16,8 @@ export class EventsService {
             // Add both users to match list
             this.addToMatches(username, socket, queue_username, queue_socket)
             
-            socket.emit('match_found', username)
-            queue_socket.emit('match_found', queue_username)
+            socket.emit('match_found', queue_username)
+            queue_socket.emit('match_found', username)
         }
     }
 

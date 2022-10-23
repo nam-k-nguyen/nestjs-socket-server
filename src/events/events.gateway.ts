@@ -48,6 +48,12 @@ export class EventsGateway {
     console.log(this.eventsService.getQueue())
     console.log(client.id)
     
-    return 'server stuff';
+    return 'finding a user for you...';
+  }
+
+  @SubscribeMessage('xo_click')
+  makeMove(@MessageBody() username: string, opponent_username: string, row: number, col: number, @ConnectedSocket() client: Socket): any{
+    this.eventsService.findMatchWithTwoUsername(username, opponent_username)
+    client.emit('opponent_xo_click', {username, row, col})
   }
 }
