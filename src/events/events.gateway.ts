@@ -20,7 +20,7 @@ import { EventsService } from './events.service';
 export class EventsGateway {
   // @WebSocketServer()
   // server: Server;
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService) { }
 
   @SubscribeMessage('events')
   findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
@@ -44,16 +44,22 @@ export class EventsGateway {
   @SubscribeMessage('find_match')
   findMatch(@MessageBody() username: string, @ConnectedSocket() client: Socket): string {
     this.eventsService.addToQueue(username, client)
-    
+
     console.log(this.eventsService.getQueue())
     console.log(client.id)
-    
+
     return 'finding a user for you...';
   }
 
   @SubscribeMessage('xo_click')
-  makeMove(@MessageBody() username: string, opponent_username: string, row: number, col: number, @ConnectedSocket() client: Socket): any{
-    this.eventsService.findMatchWithTwoUsername(username, opponent_username)
-    client.emit('opponent_xo_click', {username, row, col})
+  makeMove(@MessageBody() username: string, opponent_username: string, row: number, col: number, @ConnectedSocket() client: Socket): any {
+    let match = this.eventsService.findMatchWithTwoUsername(username, opponent_username)
+    let opponent_socket: Socket;
+    console.log(match)
+    if (match && match.p1.username === opponent_username) { opponent_socket = match.p1.socket }
+    if (match && match.p2.username === opponent_username) { opponent_socket = match.p2.socket }
+    console.log(match.p1.username, match.p2.username)
+    console.log(opponent_socket)
+    opponent_socket.emit('opponent_xo_click', { username, row, col })
   }
 }
