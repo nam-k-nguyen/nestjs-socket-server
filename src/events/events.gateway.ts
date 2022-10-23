@@ -57,17 +57,12 @@ export class EventsGateway {
 
     console.log('xo click data', data)
     let match = this.eventsService.findMatchWithTwoUsername(data.username, data.opponent_username)
-    let opponent_socket: Socket;
 
     console.log('match in xo_click', match)
     if (match !== undefined) {
       console.log('inside xo_click', match)
-      if (match.p1.username === data.opponent_username) { opponent_socket = match.p1.socket }
-      if (match.p2.username === data.opponent_username) { opponent_socket = match.p2.socket }
-      console.log('opponent socket in xo_click', opponent_socket)
-      opponent_socket.emit('opponent_xo_click', { username: data.username, row: data.row, col: data.column })
+      if (match.p1.username === data.opponent_username) { match.p1.socket.emit('opponent_xo_click', { username: data.username, row: data.row, col: data.column }) }
+      if (match.p2.username === data.opponent_username) { match.p2.socket.emit('opponent_xo_click', { username: data.username, row: data.row, col: data.column }) }
     }
-
-    // console.log('match usernames in xo_click', match.p1.username, match.p2.username)
   }
 }
