@@ -12,10 +12,12 @@ export class EventsService {
         // If not match new user with queueing user 
         else {
             // Remove queue user from queue
-            let {queue_username, queue_socket} = this.waiting_queue.shift();
+            let queue_user = this.waiting_queue.shift();
+            let queue_username = queue_user.username
+            let queue_socket = queue_user.socket
             // Add both users to match list
             this.addToMatches(username, socket, queue_username, queue_socket)
-            
+            console.log(socket, username, queue_socket, queue_username)
             socket.emit('match_found', queue_username)
             queue_socket.emit('match_found', username)
         }
