@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -6,7 +7,10 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { from, Observable } from 'rxjs';
+import { Socket } from 'socket.io';
+import { EventsService } from './events.service';
 // import { Server } from 'socket.io';
+
 
 @WebSocketGateway({
   cors: {
@@ -16,6 +20,7 @@ import { from, Observable } from 'rxjs';
 export class EventsGateway {
   // @WebSocketServer()
   // server: Server;
+  constructor(private readonly eventsService: EventsService) {}
 
   @SubscribeMessage('events')
   findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
@@ -37,14 +42,12 @@ export class EventsGateway {
   }
 
   @SubscribeMessage('find_match')
-  async findMatch(@MessageBody() data: any): Promise<string> {
-    console.log(data)
-    return 'the server said that somebody just find a match'
+  findMatch(@MessageBody() username: string, @ConnectedSocket() client: Socket): string {
+    this.eventsService.addToQueue(username, client)
+    
+    console.log(this.eventsService.getQueue())
+    console.log(client.id)
+    
+    return 'server stuff';
   }
-
-  // @SubscribeMessage('queueing')
-  // queue(@MessageBody() data: any): string {
-  //   return 'stonk'
-  // }
-
 }
